@@ -33,7 +33,7 @@
 		$(this).ssMultiDatepicker();
 
 		if($(this).data('multidatepicker')) {
-			$(this).datepicker('show'); // use subclassed datepicker-show
+			$(this).datepicker('show'); // use subclassed datepicker-show method
 		}
 	});
 }(jQuery));
