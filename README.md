@@ -17,6 +17,7 @@ Provides an MultipleDatePickerField for managing and saving a string of multiple
   * Allows setting custom date separator (default: ", "), more Multidatepicker-specific configuration options can easily be added.
   * TODO: Saving into many_many relation (currently only textfield supported)
   * TODO: Full unit test coverage
+  * TODO: Validation (currently commented out)
 
 ## Usage
 
