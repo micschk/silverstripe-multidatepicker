@@ -13,7 +13,7 @@ Provides an MultipleDatePickerField for managing and saving a string of multiple
 ## Features
 
   * Builds on silverstripe DateField (with Text field), same config & localisation supported (specific locales may need some further testing)
-  * Integrates [https://github.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI](MDP 1.6.3), a plugin that enables jQuery UI calendar to manage multiple dates
+  * Integrates [MDP 1.6.3](https://github.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI), a plugin that enables jQuery UI calendar to manage multiple dates
   * Allows setting custom date separator (default: ", "), more Multidatepicker-specific configuration options can easily be added.
   * TODO: Saving into many_many relation (currently only textfield supported)
   * TODO: Full unit test coverage
