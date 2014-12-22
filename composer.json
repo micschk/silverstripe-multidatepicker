@@ -1,0 +1,26 @@
+{
+	"name": "micschk/silverstripe-multidatepicker",
+	"description": "Provides an MultipleDatePickerField for managing and saving a string of multiple dates into a text field",
+	"type": "silverstripe-module",
+	"keywords": ["silverstripe", "date", "field", "multiple"],
+	"license": "BSD License",
+	"homepage": "http://github.com/micschk/silverstripe-multidatepicker",
+	"authors": [
+	{
+		"name": "Michael van Schaik",
+		"email": "mic@restruct.nl"
+	}
+	],
+
+	"require":
+	{
+		"silverstripe/framework": "~3.0",
+		"composer/installers": "*"
+	},
+	"support": {
+		"issues": "https://github.com/micschk/silverstripe-multidatepicker/issues"
+	},
+	"extra": {
+		"installer-name": "multidatepicker"
+	}
+}
