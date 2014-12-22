@@ -5,12 +5,29 @@ class MultiDateField extends DateField {
 	/**
 	 * @var $separator Determines on which character to split tags in a string.
 	 */
-	protected $separator = ' ';
+	protected static $dbseparator = ',';
 	
-	protected static $separator_to_regex = array(
-		' ' => '\s',
-		',' => '\,', 
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $default_config = array(
+		'showcalendar' => true, // multidatepicker doesn't make sense otherwise
+		'separator' => ', ', // front-end separator
 	);
+	
+//	public function __construct($name, $title = null, $value = null) {
+//
+//		parent::__construct($name, $title, $value);
+//		
+//		$this->config = $this->config()->default_config;
+//		
+//		foreach ($this->config()->default_config as $defaultK => $defaultV) {
+//			// overwrite DateField default config with multidatefield's & add extra's
+//			$this->setConfig($defaultK, $defaultV);
+//		}
+//		//Debug::dump($this->getConfig('separator'));
+//	}
 	
 	public function FieldHolder($properties = array()) {
 		if ($this->getConfig('showcalendar')) {
@@ -46,7 +63,7 @@ class MultiDateField extends DateField {
 
 	public function Field($properties = array()) {
 		$config = array(
-			'separator' => $this->getConfig('separator'),
+			'separator' => ($this->getConfig('separator') ? $this->getConfig('separator') : ', '),
 			'showcalendar' => $this->getConfig('showcalendar'),
 			'isoDateformat' => $this->getConfig('dateformat'),
 			'jquerydateformat' => DateField_View_JQuery::convert_iso_to_jquery_format($this->getConfig('dateformat')),
@@ -87,7 +104,7 @@ class MultiDateField extends DateField {
 	 */
 	public function setValue($val) {
 		$locale = new Zend_Locale($this->locale);
-		
+		//Debug::dump($val);
 		if(empty($val)) {
 			$this->value = null;
 			$this->valueObj = null;
@@ -98,11 +115,12 @@ class MultiDateField extends DateField {
 				if(!empty($val)){
 					// Setting in corect locale.
 					$first = true;
-					foreach(explode(',', $val) as $ts){
+					foreach(explode(self::$dbseparator, $val) as $ts){
+						//Debug::dump($ts);
 						if(Zend_Date::isDate(trim($ts), $this->getConfig('dateformat'), $locale)) {
+							//Debug::dump('isdate');
 							$dateobj = new Zend_Date(trim($ts), $this->getConfig('dateformat'), $locale);
-							if(!$first)$this->value .= $this->getConfig('separator');
-							$this->value .= $dateobj->get($this->getConfig('dateformat'), $locale);
+							$valueArr[] = $dateobj->get($this->getConfig('dateformat'), $locale);
 							if($first){ // reset array
 								$this->valueObj = array($dateobj);
 							} else { // add to array
@@ -111,9 +129,9 @@ class MultiDateField extends DateField {
 						}
 						// load ISO date from database (usually through Form->loadDataForm())
 						else if(Zend_Date::isDate(trim($ts), $this->getConfig('datavalueformat'))) {
+							//Debug::dump('isodate');
 							$dateobj = new Zend_Date(trim($ts), $this->getConfig('datavalueformat'));
-							if(!$first)$this->value .= $this->getConfig('separator');
-							$this->value .= $dateobj->get($this->getConfig('dateformat'), $locale);
+							$valueArr[] = $dateobj->get($this->getConfig('dateformat'), $locale);
 							if($first){ // reset array
 								$this->valueObj = array($dateobj);
 							} else { // add to array
@@ -122,6 +140,10 @@ class MultiDateField extends DateField {
 						}
 						$first = false;
 					}
+					// Join (implode) all together into $this->value string
+					$this->value = implode(
+							($this->getConfig('separator') ? $this->getConfig('separator') : ', '), 
+							$valueArr);
 				}
 				// this will probably never be executed in MultiDatefield, invalid dates will be discarded
 				else {
@@ -139,13 +161,13 @@ class MultiDateField extends DateField {
 	 */
 	public function dataValue() {
 		if($this->valueObj) {
-			$ret = [];
+			$ret = array();
 			// Loop over multiple dates
 			foreach($this->valueObj as $dateobj){
 				$ret[] = $dateobj->toString($this->getConfig('datavalueformat'));
 			}
-//			Debug::dump(implode(',', $ret));
-			return implode(',', $ret);
+			//Debug::dump(implode(',', $ret));
+			return implode(self::$dbseparator, $ret);
 		} else {
 			return null;
 		}
