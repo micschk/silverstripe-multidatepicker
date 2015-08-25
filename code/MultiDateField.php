@@ -277,15 +277,11 @@ class MultiDateField_Disabled extends MultiDateField {
 		
 	public function Field($properties = array()) {
 		if($this->valueObj) {
-			if($this->valueObj->isToday()) {
-				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
-					. ' ('._t('DateField.TODAY','today').')');
-			} else {
-				$df = new Date($this->name);
-				$df->setValue($this->dataValue());
-				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
-					. ', ' . $df->Ago());
+			$ret = array();
+			foreach($this->valueObj as $dateobj){
+				$ret[] = $dateobj->toString($this->getConfig('datavalueformat'));
 			}
+			$val = implode(self::getDBseparator(), $ret);
 		} else {
 			$val = '<i>('._t('DateField.NOTSET', 'not set').')</i>';
 		}
