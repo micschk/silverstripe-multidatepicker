@@ -121,6 +121,7 @@ class MultiDateField extends DateField {
 				if(!empty($val)){
 					// Setting in corect locale.
 					$first = true;
+					$valueArr = array();
 					foreach(explode(self::$dbseparator, $val) as $ts){
 						//Debug::dump($ts);
 						if(Zend_Date::isDate(trim($ts), $this->getConfig('dateformat'), $locale)) {
